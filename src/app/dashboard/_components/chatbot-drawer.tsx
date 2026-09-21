@@ -11,7 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { handleChat, handleChatWithThinking } from "@/features/ai/chat";
+import { handleChat } from "@/features/ai/chat";
 import { cn } from "@/lib/utils";
 import { BotIcon, ChevronDownIcon, EllipsisIcon, XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -36,36 +36,31 @@ export default function ChatbotDrawer() {
     }[]
   >([]);
 
-  const { mutate: handleChatMutation, isPending } = useMutation({
-    mutationFn: handleChat,
-    onSuccess: (response) => {
-      const botMessage = {
-        role: "model",
-        parts: [{ text: response || "Terjadi kesalahan" }],
-      };
-      setConversation((prev) => [...prev, botMessage]);
-    },
-    onError: (error) => {
-      const botMessage = {
-        role: "model",
-        parts: [{ text: "Terjadi kesalahan" + error.message }],
-      };
-      setConversation((prev) => [...prev, botMessage]);
-    },
-  });
+  const [isThinking, setIsThinking] = useState<boolean>(false);
 
-  const {
-    mutate: handleChatWithThinkingMutation,
-    isPending: isPendingChatWithThinking,
-  } = useMutation({
-    mutationFn: handleChatWithThinking,
+  const { mutate: handleChatMutation, isPending } = useMutation({
+    mutationFn: ({
+      message,
+      isThinking,
+    }: {
+      message: string;
+      isThinking: boolean;
+    }) => handleChat(message, isThinking),
     onSuccess: (response) => {
+      let parts: {
+        text: string;
+        thought?: boolean;
+      }[] = [];
+
+      if (response?.thought !== "") {
+        parts = [
+          ...parts,
+          { thought: true, text: response?.thought || "Terjadi kesalahan" },
+        ];
+      }
       const botMessage = {
         role: "model",
-        parts: [
-          { thought: true, text: response?.thought || "Terjadi kesalahan" },
-          { text: response?.answer || "Terjadi kesalahan" },
-        ],
+        parts: [...parts, { text: response?.answer || "Terjadi kesalahan" }],
       };
       setConversation((prev) => [...prev, botMessage]);
     },
@@ -88,7 +83,7 @@ export default function ChatbotDrawer() {
       ],
     };
     setConversation((prev) => [...prev, newMessage]);
-    handleChatWithThinkingMutation(message);
+    handleChatMutation({ message, isThinking });
   }
 
   useEffect(() => {
@@ -183,7 +178,7 @@ export default function ChatbotDrawer() {
                   </div>
                 </div>
               ))}
-              {isPendingChatWithThinking && (
+              {isPending && (
                 <div className="flex items-center animate-pulse">
                   <EllipsisIcon className="size-8 text-primary/50" />
                 </div>
@@ -197,7 +192,11 @@ export default function ChatbotDrawer() {
           )}
         </div>
         <DrawerFooter>
-          <ChatbotTextarea sendMessage={sendMessage} />
+          <ChatbotTextarea
+            isThinking={isThinking}
+            setIsThinking={setIsThinking}
+            sendMessage={sendMessage}
+          />
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
