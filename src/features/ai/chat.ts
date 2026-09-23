@@ -1,5 +1,6 @@
 "use server";
 
+import { Conversation } from "@/app/types/ai";
 import { ENVIRONMENT } from "@/config/environment";
 import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 
@@ -7,11 +8,14 @@ const ai = new GoogleGenAI({
   apiKey: ENVIRONMENT.googleGenAIKey,
 });
 
-export async function handleChat(message: string, isThinking: boolean) {
+export async function handleChat(
+  isThinking: boolean,
+  conversation: Conversation[],
+) {
   console.log(isThinking);
   const response = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
-    contents: message,
+    contents: [...conversation],
     config: {
       thinkingConfig: {
         includeThoughts: isThinking,
@@ -46,12 +50,12 @@ export async function handleChat(message: string, isThinking: boolean) {
 }
 
 export async function* handleChatStreaming(
-  message: string,
+  conversation: Conversation[],
   isThinking: boolean,
 ) {
   const response = await ai.models.generateContentStream({
     model: "gemini-3-flash-preview",
-    contents: message,
+    contents: [...conversation],
     config: {
       thinkingConfig: {
         includeThoughts: isThinking,

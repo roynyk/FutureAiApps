@@ -11,7 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { handleChat, handleChatStreaming } from "@/features/ai/chat";
+import { handleChatStreaming } from "@/features/ai/chat";
 import { cn } from "@/lib/utils";
 import { BotIcon, ChevronDownIcon, EllipsisIcon, XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -23,29 +23,20 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { Conversation } from "@/app/types/ai";
 
 export default function ChatbotDrawer() {
   const chatRef = useRef<HTMLDivElement>(null);
-  const [conversation, setConversation] = useState<
-    {
-      role: string;
-      parts: {
-        text: string;
-        thought?: boolean;
-      }[];
-    }[]
-  >([]);
+  const [conversation, setConversation] = useState<Conversation[]>([]);
 
   const [isThinking, setIsThinking] = useState<boolean>(false);
 
   // const { mutate: handleChatMutation, isPending } = useMutation({
   //   mutationFn: ({
-  //     message,
   //     isThinking,
   //   }: {
-  //     message: string;
   //     isThinking: boolean;
-  //   }) => handleChat(message, isThinking),
+  //   }) => handleChat(conversation, isThinking),
   //   onSuccess: (response) => {
   //     let parts: {
   //       text: string;
@@ -74,13 +65,7 @@ export default function ChatbotDrawer() {
   // });
 
   const { mutate: handleChatMutation, isPending } = useMutation({
-    mutationFn: async ({
-      message,
-      isThinking,
-    }: {
-      message: string;
-      isThinking: boolean;
-    }) => {
+    mutationFn: async ({ isThinking }: { isThinking: boolean }) => {
       if (isThinking) {
         setConversation((prev) => [
           ...prev,
@@ -94,7 +79,7 @@ export default function ChatbotDrawer() {
             ],
           },
         ]);
-        const response = await handleChatStreaming(message, isThinking);
+        const response = await handleChatStreaming(conversation, isThinking);
 
         for await (const chunk of response) {
           setConversation((prev) => {
@@ -135,7 +120,7 @@ export default function ChatbotDrawer() {
             ],
           },
         ]);
-        const response = await handleChatStreaming(message, isThinking);
+        const response = await handleChatStreaming(conversation, isThinking);
 
         for await (const chunk of response) {
           setConversation((prev) => {
@@ -154,31 +139,13 @@ export default function ChatbotDrawer() {
         return response;
       }
     },
-    // onSuccess: (response) => {
-    //   let parts: {
-    //     text: string;
-    //     thought?: boolean;
-    //   }[] = [];
-
-    //   if (response?.thought !== "") {
-    //     parts = [
-    //       ...parts,
-    //       { thought: true, text: response?.thought || "Terjadi kesalahan" },
-    //     ];
-    //   }
-    //   const botMessage = {
-    //     role: "model",
-    //     parts: [...parts, { text: response?.answer || "Terjadi kesalahan" }],
-    //   };
-    //   setConversation((prev) => [...prev, botMessage]);
-    // },
-    // onError: (error) => {
-    //   const botMessage = {
-    //     role: "model",
-    //     parts: [{ text: "Terjadi kesalahan" + error.message }],
-    //   };
-    //   setConversation((prev) => [...prev, botMessage]);
-    // },
+    onError: (error) => {
+      const botMessage = {
+        role: "model",
+        parts: [{ text: "Terjadi kesalahan" + error.message }],
+      };
+      setConversation((prev) => [...prev, botMessage]);
+    },
   });
 
   function sendMessage(message: string) {
@@ -191,7 +158,7 @@ export default function ChatbotDrawer() {
       ],
     };
     setConversation((prev) => [...prev, newMessage]);
-    handleChatMutation({ message, isThinking });
+    handleChatMutation({ isThinking });
   }
 
   useEffect(() => {
