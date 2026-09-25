@@ -61,6 +61,18 @@ export async function* handleChatStreaming(
         includeThoughts: isThinking,
         thinkingLevel: isThinking ? ThinkingLevel.HIGH : ThinkingLevel.MINIMAL,
       },
+      systemInstruction: ``,
+      //sampling parameters
+      temperature: 0.2,
+      topK: 5,
+      topP: 0.1,
+
+      //output control
+      maxOutputTokens: 1024,
+      stopSequences: ["\n\n\n", "###", "User:", "Pengguna:"],
+      // repetition Penalties
+      // presencePenalty: 1.5,
+      // frequencyPenalty:,
     },
   });
 
