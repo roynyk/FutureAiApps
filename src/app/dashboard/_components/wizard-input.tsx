@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { handleWizardInput } from "@/features/ai/chat";
+import { generateEmbedding } from "@/features/ai/embedding";
 import { createTransaction } from "@/features/transaction/action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -33,9 +34,11 @@ export default function WizardInput({ refetch }: { refetch: () => void }) {
         throw new Error("Failed to process AI input");
       }
 
+      const hasilembed = await generateEmbedding(JSON.stringify(aiResponse));
+      console.log(hasilembed);
       return createTransaction(aiResponse);
     },
-    onSuccess: (response) => {
+    onSuccess: () => {
       toast.success("Transaction created succesfully");
       refetch();
       form.reset();
