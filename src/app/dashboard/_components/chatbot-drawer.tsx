@@ -30,7 +30,7 @@ export default function ChatbotDrawer() {
   const [conversation, setConversation] = useState<Conversation[]>([]);
 
   const [isThinking, setIsThinking] = useState<boolean>(false);
-
+  const [mode, setMode] = useState<"general" | "personal">("general");
   // const { mutate: handleChatMutation, isPending } = useMutation({
   //   mutationFn: ({
   //     isThinking,
@@ -82,7 +82,7 @@ export default function ChatbotDrawer() {
         const response = await handleChatStreaming(
           conversation,
           isThinking,
-          "personal",
+          mode,
         );
 
         for await (const chunk of response) {
@@ -127,7 +127,7 @@ export default function ChatbotDrawer() {
         const response = await handleChatStreaming(
           conversation,
           isThinking,
-          "personal",
+          mode,
         );
 
         for await (const chunk of response) {
@@ -278,6 +278,8 @@ export default function ChatbotDrawer() {
           <ChatbotTextarea
             isThinking={isThinking}
             setIsThinking={setIsThinking}
+            mode={mode}
+            setMode={setMode}
             sendMessage={sendMessage}
           />
         </DrawerFooter>
