@@ -5,7 +5,7 @@ import { ThinkingLevel } from "@google/genai";
 import { createAI } from "./instance";
 import z from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { generateEmbedding } from "./embedding";
+import { findEmbedding, generateEmbedding } from "./embedding";
 import { Transaction } from "@/app/types/transaction";
 
 export async function handleChat(
@@ -15,7 +15,7 @@ export async function handleChat(
   const ai = createAI();
   console.log(isThinking);
   const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
+    model: "gemini-3.8-flash",
     contents: [...conversation],
     config: {
       thinkingConfig: {
@@ -53,7 +53,7 @@ export async function handleChat(
 async function generalChat(conversation: Conversation[], isThinking?: boolean) {
   const ai = createAI();
   const response = await ai.models.generateContentStream({
-    model: "gemini-3-flash-preview",
+    model: "gemini-3.8-flash",
     contents: [...conversation],
     config: {
       thinkingConfig: {
@@ -133,19 +133,7 @@ async function personalizeChat(
 ) {
   const ai = createAI();
 
-  const supabase = await createClient();
-
-  const queryEmbedding = await generateEmbedding(query);
-
-  const { data, error } = await supabase.rpc("match_transactions", {
-    query_embedding: queryEmbedding,
-    match_threshold: 0.3,
-    match_count: 15,
-  });
-
-  if (error) {
-    throw new Error("Failed to perform vector search.");
-  }
+  const data = await findEmbedding(query);
 
   let contextData = "";
 
@@ -185,7 +173,7 @@ async function personalizeChat(
   `;
 
   const response = await ai.models.generateContentStream({
-    model: "gemini-3-flash-preview",
+    model: "gemini-3.8-flash",
     contents: [
       ...(historyChat ?? []),
       {
