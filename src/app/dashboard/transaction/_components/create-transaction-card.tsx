@@ -83,7 +83,7 @@ export default function CreateTransactionCard({
   };
 
   return (
-    <Card className="w-full gap-2">
+    <Card className="w-full gap-2 h-fit">
       <CardHeader className="gap-0">
         <CardTitle>Create Transaction</CardTitle>
         <CardDescription>Add a new financial Activities</CardDescription>
