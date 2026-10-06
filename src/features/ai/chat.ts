@@ -15,7 +15,7 @@ export async function handleChat(
   const ai = createAI();
   console.log(isThinking);
   const response = await ai.models.generateContent({
-    model: "gemini-3.8-flash",
+    model: "gemini-3-flash-preview",
     contents: [...conversation],
     config: {
       thinkingConfig: {
@@ -53,7 +53,7 @@ export async function handleChat(
 async function generalChat(conversation: Conversation[], isThinking?: boolean) {
   const ai = createAI();
   const response = await ai.models.generateContentStream({
-    model: "gemini-3.8-flash",
+    model: "gemini-3-flash-preview",
     contents: [...conversation],
     config: {
       thinkingConfig: {
@@ -173,7 +173,7 @@ async function personalizeChat(
   `;
 
   const response = await ai.models.generateContentStream({
-    model: "gemini-3.8-flash",
+    model: "gemini-3-flash-preview",
     contents: [
       ...(historyChat ?? []),
       {
