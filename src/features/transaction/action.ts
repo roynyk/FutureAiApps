@@ -93,7 +93,7 @@ export async function createTransaction(
   if (embeddingVector) payload.embedding = embeddingVector;
   const { data, error } = await supabase.from("transactions").insert(payload);
 
-  console.log(embeddingVector);
+  // console.log(embeddingVector);
   if (error) throw new Error(error.message);
 
   return data;

@@ -3,8 +3,6 @@
 import { Conversation } from "@/app/types/ai";
 import { ThinkingLevel } from "@google/genai";
 import { createAI } from "./instance";
-import z from "zod";
-import { createClient } from "@/lib/supabase/server";
 import { findEmbedding, generateEmbedding } from "./embedding";
 import { Transaction } from "@/app/types/transaction";
 
@@ -15,7 +13,7 @@ export async function handleChat(
   const ai = createAI();
   console.log(isThinking);
   const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
+    model: "gemini-3.5-flash",
     contents: [...conversation],
     config: {
       thinkingConfig: {
@@ -53,7 +51,7 @@ export async function handleChat(
 async function generalChat(conversation: Conversation[], isThinking?: boolean) {
   const ai = createAI();
   const response = await ai.models.generateContentStream({
-    model: "gemini-3-flash-preview",
+    model: "gemini-3.5-flash",
     contents: [...conversation],
     config: {
       thinkingConfig: {
@@ -173,7 +171,7 @@ async function personalizeChat(
   `;
 
   const response = await ai.models.generateContentStream({
-    model: "gemini-3-flash-preview",
+    model: "gemini-3.5-flash",
     contents: [
       ...(historyChat ?? []),
       {
