@@ -3,8 +3,7 @@
 import { Conversation } from "@/app/types/ai";
 import { Content, FunctionCall, Part, ThinkingLevel } from "@google/genai";
 import { createAI } from "./instance";
-import { findEmbedding, generateEmbedding } from "./embedding";
-import { Transaction } from "@/app/types/transaction";
+import { findEmbedding } from "./embedding";
 import { getTransactionDeclaration } from "./functionDeclaration";
 
 export async function handleChat(
@@ -59,6 +58,13 @@ async function generalChat(conversation: Content[], isThinking?: boolean) {
         includeThoughts: isThinking,
         thinkingLevel: isThinking ? ThinkingLevel.HIGH : ThinkingLevel.MINIMAL,
       },
+      tools: [
+        {
+          // googleSearch: {},
+          // urlContext: {},
+          // googleMaps: {},
+        },
+      ],
       systemInstruction: `
       [Role]
       Kamu adalah Futurebot seorang financial advisor. yang punya gaya bahasa sopan dan suka
@@ -150,7 +156,7 @@ export async function* handleChatStreaming(
             if (!part.text) {
               continue;
             } else if (part.thought) {
-              return `[thought]${part.text}`;
+              yield `[thought]${part.text}`;
             } else {
               yield part.text;
             }
@@ -213,9 +219,14 @@ export async function* handleChatStreaming(
         config: {
           tools: [
             {
+              googleSearch: {},
+              urlContext: {},
               functionDeclarations: [getTransactionDeclaration],
             },
           ],
+          toolConfig: {
+            includeServerSideToolInvocations: true,
+          },
           thinkingConfig: {
             includeThoughts: isThinking,
             thinkingLevel: isThinking

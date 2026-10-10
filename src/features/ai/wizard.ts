@@ -159,7 +159,6 @@ export async function handleWizardTools(message: string) {
               }
               await createTransaction(transaction);
               break;
-
             case "delete_transaction":
               await deleteTransaction(`${args.id}`);
               break;
