@@ -4,7 +4,7 @@ import { Conversation } from "@/app/types/ai";
 import { Content, FunctionCall, Part, ThinkingLevel } from "@google/genai";
 import { createAI } from "./instance";
 import { findEmbedding } from "./embedding";
-import { getTransactionDeclaration } from "./functionDeclaration";
+import { getTransactionDeclaration } from "./function-declaration";
 
 export async function handleChat(
   isThinking: boolean,
