@@ -61,7 +61,7 @@ export async function generateChart(request: string) {
   };
 
   const response = await ai.models.generateContent({
-    model: "gemini-3.8-flash",
+    model: "gemini-3.6-flash",
     contents,
     config: {
       responseMimeType: "application/json",

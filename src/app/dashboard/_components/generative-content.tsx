@@ -84,14 +84,15 @@ export default function GenerativeContent() {
     mutate(data.request);
   }
 
-  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      onSubmit(form.getValues());
-    }
-  }
+  // function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+  //   if (e.key === "Enter" && !e.shiftKey) {
+  //     e.preventDefault();
+  //     form.handleSubmit(onSubmit)();
+  //     // onSubmit(form.getValues());
+  //   }
+  // }
 
-  console.log(result);
+  // console.log(result);
 
   return (
     <Card className="w-full relative overflow-hidden">
@@ -126,7 +127,7 @@ export default function GenerativeContent() {
                       id="form-request"
                       placeholder="Insert Your request"
                       className="w-50 lg:w-70"
-                      onKeyDown={handleKeyDown}
+                      // onKeyDown={handleKeyDown}
                       disabled={isPending}
                     />
                   </Field>
@@ -153,7 +154,7 @@ export default function GenerativeContent() {
           </div>
         )}
         {!result ? (
-          <div className="h-70 flex items-center justify-center border-2 border-dashed rounded-lg">
+          <div className="h-70 flex flex-row items-center justify-center border-2 border-dashed rounded-lg">
             {isPending ? (
               <div>
                 <Loader2Icon className="size-8 animate-spin" />
