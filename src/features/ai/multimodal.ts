@@ -9,7 +9,7 @@ export async function extractReceiptData(formdata: FormData) {
   if (!file) {
     throw new Error("No file uploaded");
   }
-  console.log(file);
+  // console.log(file);
   const mimeType = file.type;
   const base64Data = Buffer.from(await file.arrayBuffer()).toString("base64");
   const ai = createAI();
