@@ -202,11 +202,7 @@ export default function CreateTransactionCard({
                 </Field>
               )}
             />
-            <Button
-              size="lg"
-              type="submit"
-              disabled={!form.formState.isValid || isPending}
-            >
+            <Button size="lg" type="submit" disabled={isPending}>
               {isPending ? "Creating..." : "Create Transaction"}
             </Button>
           </FieldGroup>
