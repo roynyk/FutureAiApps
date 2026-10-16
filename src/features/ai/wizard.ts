@@ -15,24 +15,7 @@ import {
   getTransactionDeclaration,
   updateTransactionDeclaration,
 } from "./function-declaration";
-
-const transactionSchema = z.object({
-  amount: z.number().default(0).describe("Transaction nominal"),
-  type: z.enum(["income", "expense"]).describe("Type of transaction"),
-  category: z
-    .enum([
-      "Food & Drink",
-      "Shopping",
-      "Housing",
-      "Transportation",
-      "Entertainment",
-      "Salary",
-      "Others",
-    ])
-    .describe("Category of transaction"),
-  description: z.string().describe("Short text for describing transaction"),
-  date: z.string().describe("the date of transaction in YYYY-MM-DD format"),
-});
+import { CATEGORIES, transactionSchema } from "@/constant/transaction-constant";
 
 export async function handleWizardInput(message: string) {
   const contents = `
@@ -45,7 +28,7 @@ export async function handleWizardInput(message: string) {
     - "amount": a number representing the cost (positive). Use 0 if not provided.
     - "type": type of transaction, either 'income' or 'expense'.
     - "category": choose the most appropriate category from this exact list:
-                  'Food & Drink','Shopping','Housing','Transportation','Entertainment','Salary','Others'.
+                  ${CATEGORIES.join(",")}.
     - "description": a short string describing the transaction, first letter capitalized.
     - "date": date of transaction in YYYY-MM-DD format.
               Assume the current date if relative terms like 'today' or 'just now'. If not define use current date.
@@ -62,7 +45,7 @@ export async function handleWizardInput(message: string) {
   `;
   const ai = createAI();
   const response = await ai.models.generateContent({
-    model: "gemini-3.5-flash",
+    model: "gemini-3.7-flash",
     contents,
     config: {
       responseMimeType: "application/json",
@@ -111,7 +94,7 @@ export async function handleWizardTools(message: string) {
   let running = true;
   while (running) {
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-3.7-flash",
       contents,
       config: {
         tools: [

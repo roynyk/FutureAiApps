@@ -30,6 +30,7 @@ import { createTransaction } from "@/features/transaction/action";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import FileDropzoneInput from "../../_components/file-dropzone-input";
+import { CATEGORIES } from "@/constant/transaction-constant";
 
 const formSchema = z.object({
   amount: z.string().min(1, "amount is required"),
@@ -146,17 +147,14 @@ export default function CreateTransactionCard({
                       <SelectValue placeholder="Select Category" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Food & Drink">Food & Drink</SelectItem>
-                      <SelectItem value="Transportation">
-                        Transportation
-                      </SelectItem>
-                      <SelectItem value="Entertainment">
-                        Entertainment
-                      </SelectItem>
-                      <SelectItem value="Shopping">Shopping</SelectItem>
-                      <SelectItem value="Housing">Housing</SelectItem>
-                      <SelectItem value="Salary">Salary</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
+                      {CATEGORIES.map((category, index) => (
+                        <SelectItem
+                          value={category}
+                          key={`${index}-${category}`}
+                        >
+                          {category}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   {fieldState.invalid && (
