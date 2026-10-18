@@ -1,7 +1,14 @@
 "use server";
 
 import { Conversation } from "@/app/types/ai";
-import { Content, FunctionCall, Part, ThinkingLevel } from "@google/genai";
+import {
+  Content,
+  FunctionCall,
+  HarmBlockThreshold,
+  HarmCategory,
+  Part,
+  ThinkingLevel,
+} from "@google/genai";
 import { createAI } from "./instance";
 import { findEmbedding } from "./embedding";
 import { getTransactionDeclaration } from "./function-declaration";
@@ -219,20 +226,26 @@ export async function* handleChatStreaming(
         config: {
           tools: [
             {
-              googleSearch: {},
-              urlContext: {},
+              // googleSearch: {},
+              // urlContext: {},
               functionDeclarations: [getTransactionDeclaration],
             },
           ],
-          toolConfig: {
-            includeServerSideToolInvocations: true,
-          },
+          // toolConfig: {
+          //   includeServerSideToolInvocations: true,
+          // },
           thinkingConfig: {
             includeThoughts: isThinking,
             thinkingLevel: isThinking
               ? ThinkingLevel.HIGH
               : ThinkingLevel.MINIMAL,
           },
+          safetySettings: [
+            {
+              category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+              threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+            },
+          ],
         },
       });
 
