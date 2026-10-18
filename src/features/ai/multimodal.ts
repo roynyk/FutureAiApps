@@ -4,8 +4,8 @@ import { CATEGORIES, transactionSchema } from "@/constant/transaction-constant";
 import { createAI } from "./instance";
 import { Content } from "@google/genai";
 
-export async function extractReceiptData(formdata: FormData) {
-  const file = formdata.get("file") as File;
+export async function extractReceiptData(formData: FormData) {
+  const file = formData.get("file") as File;
   if (!file) {
     throw new Error("No file uploaded");
   }
@@ -17,6 +17,12 @@ export async function extractReceiptData(formdata: FormData) {
     {
       role: "user",
       parts: [
+        {
+          inlineData: {
+            mimeType,
+            data: base64Data,
+          },
+        },
         {
           text: `
           <role>
@@ -40,12 +46,6 @@ export async function extractReceiptData(formdata: FormData) {
             Respond with only the raw JSON object, no markdown blocks, no text before or after.
           </outputFormat>
         `,
-        },
-        {
-          inlineData: {
-            mimeType,
-            data: base64Data,
-          },
         },
       ],
     },
