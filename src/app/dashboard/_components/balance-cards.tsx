@@ -34,7 +34,7 @@ export function BalanceCards({
               <div className="p-2 rounded-xl bg-primary/10 text-primary">
                 <WalletIcon className="size-5" />
               </div>
-              <span>Total Tabungan (Net Savings)</span>
+              <span>Net Savings</span>
             </div>
             <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-semibold">
               Live Balance
@@ -46,8 +46,7 @@ export function BalanceCards({
               {convertToIDR(Number(data?.savings || 0))}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Akumulasi saldo bersih dari seluruh pemasukan dikurangi
-              pengeluaran.
+              The net balance of all income minus expenses.
             </p>
           </div>
         </div>

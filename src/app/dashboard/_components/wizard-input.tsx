@@ -6,13 +6,7 @@ import { Field } from "@/components/ui/field";
 import { handleWizardTools } from "@/features/ai/wizard";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Loader2Icon,
-  MicIcon,
-  SendIcon,
-  SparkleIcon,
-  SquareIcon,
-} from "lucide-react";
+import { Loader2Icon, MicIcon, SendIcon, SquareIcon, Zap } from "lucide-react";
 import { KeyboardEvent, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Markdown from "react-markdown";
@@ -113,7 +107,7 @@ export default function WizardInput({ refetch }: { refetch: () => void }) {
           className="flex items-center gap-2"
         >
           <div className="text-primary">
-            <SparkleIcon className="size-5" />
+            <Zap className="size-5" />
           </div>
           <Controller
             control={form.control}

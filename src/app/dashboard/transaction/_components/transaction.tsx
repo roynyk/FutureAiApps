@@ -35,7 +35,7 @@ export default function Transaction() {
             Daftar Transaksi
           </h2>
           <p className="text-sm text-muted-foreground">
-            Kelola dan pantau semua riwayat transaksi keuanganmu.
+            Manage and track all your financial transaction history.
           </p>
         </div>
         <Sheet open={isOpen} onOpenChange={setIsOpen}>

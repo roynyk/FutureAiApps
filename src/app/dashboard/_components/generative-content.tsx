@@ -14,9 +14,8 @@ import {
   ImageIcon,
   Loader2Icon,
   PieChartIcon,
-  Sparkle,
-  SparkleIcon,
   VideoIcon,
+  Zap,
 } from "lucide-react";
 import { KeyboardEvent, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -134,7 +133,7 @@ export default function GenerativeContent() {
       <CardHeader>
         <div className="flex flex-col justify-between gap-4v lg:flex-row lg:items-between">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <SparkleIcon className="size-5 text-primary" />
+            <Zap className="size-5 text-primary" />
             Generative AI
           </CardTitle>
           <form
@@ -188,7 +187,7 @@ export default function GenerativeContent() {
                 {isPending ? (
                   <Loader2Icon className="animate-spin size-4" />
                 ) : (
-                  <Sparkle className="size-4" />
+                  <Zap className="size-4" />
                 )}
                 <span className="hidden lg:inline">
                   {result ? "Update" : "Generate"}
