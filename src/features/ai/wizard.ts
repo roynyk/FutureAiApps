@@ -17,51 +17,51 @@ import {
 } from "./function-declaration";
 import { CATEGORIES, transactionSchema } from "@/constant/transaction-constant";
 
-export async function handleWizardInput(message: string) {
-  const contents = `
-  <role>
-    You are an AI Wizard finance assitant, who can extract transaction details from text.
-  </role>
-  <instruction>
-    Extract the transaction details from the following text and return it as a structure JSON object.
-    The JSON object must have exactly these fields:
-    - "amount": a number representing the cost (positive). Use 0 if not provided.
-    - "type": type of transaction, either 'income' or 'expense'.
-    - "category": choose the most appropriate category from this exact list:
-                  ${CATEGORIES.join(",")}.
-    - "description": a short string describing the transaction, first letter capitalized.
-    - "date": date of transaction in YYYY-MM-DD format.
-              Assume the current date if relative terms like 'today' or 'just now'. If not define use current date.
-  </instruction>
-  <context>
-    Current Date : ${new Date().toISOString()}
-  </context>
-  <input>
-    Text to extract: ${message}
-  </input>
-  <outputFormat>
-    Respond with only the raw JSON object, no markdown blocks, no text before or after.
-  </outputFormat>
-  `;
-  const ai = createAI();
-  const response = await ai.models.generateContent({
-    model: "gemini-3.6-flash",
-    contents,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: z.toJSONSchema(transactionSchema),
-    },
-  });
+// export async function handleWizardInput(message: string) {
+//   const contents = `
+//   <role>
+//     You are an AI Wizard finance assitant, who can extract transaction details from text.
+//   </role>
+//   <instruction>
+//     Extract the transaction details from the following text and return it as a structure JSON object.
+//     The JSON object must have exactly these fields:
+//     - "amount": a number representing the cost (positive). Use 0 if not provided.
+//     - "type": type of transaction, either 'income' or 'expense'.
+//     - "category": choose the most appropriate category from this exact list:
+//                   ${CATEGORIES.join(",")}.
+//     - "description": a short string describing the transaction, first letter capitalized.
+//     - "date": date of transaction in YYYY-MM-DD format.
+//               Assume the current date if relative terms like 'today' or 'just now'. If not define use current date.
+//   </instruction>
+//   <context>
+//     Current Date : ${new Date().toISOString()}
+//   </context>
+//   <input>
+//     Text to extract: ${message}
+//   </input>
+//   <outputFormat>
+//     Respond with only the raw JSON object, no markdown blocks, no text before or after.
+//   </outputFormat>
+//   `;
+//   const ai = createAI();
+//   const response = await ai.models.generateContent({
+//     model: "gemini-3.6-flash",
+//     contents,
+//     config: {
+//       responseMimeType: "application/json",
+//       responseSchema: z.toJSONSchema(transactionSchema),
+//     },
+//   });
 
-  const transaction = transactionSchema.parse(JSON.parse(`${response.text}`));
-  if (transaction.amount <= 0) {
-    throw new Error("Cannot create transaction with invalid amount");
-  }
+//   const transaction = transactionSchema.parse(JSON.parse(`${response.text}`));
+//   if (transaction.amount <= 0) {
+//     throw new Error("Cannot create transaction with invalid amount");
+//   }
 
-  await createTransaction(transaction);
+//   await createTransaction(transaction);
 
-  return "Create transaction success";
-}
+//   return "Create transaction success";
+// }
 
 export async function handleWizardTools(formData: FormData) {
   const file = formData.get("file") as File;
