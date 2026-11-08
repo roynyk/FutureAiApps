@@ -60,6 +60,7 @@ export default function RegisterPage() {
         toast.success("Registration successful! Redirecting to dashboard...");
         router.push("/dashboard");
         router.refresh();
+        form.reset();
       } else {
         toast.success(
           "Registration successful! Please check your email inbox to verify your account.",
@@ -79,7 +80,6 @@ export default function RegisterPage() {
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     mutate(data);
-    form.reset();
   };
 
   return (
@@ -207,9 +207,10 @@ export default function RegisterPage() {
               disabled={isPending}
             >
               {isPending ? (
-                <LoaderCircle className="animate-spin">
+                <div className="flex flex-row gap-2">
+                  <LoaderCircle className="animate-spin" />
                   Registering...
-                </LoaderCircle>
+                </div>
               ) : (
                 "Register"
               )}
